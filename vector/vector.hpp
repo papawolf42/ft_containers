@@ -6,22 +6,40 @@
 /*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 02:41:59 by gunkim            #+#    #+#             */
-/*   Updated: 2022/07/18 05:50:28 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/07/19 13:41:33 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include <algorithm>
 #include <vector>
+#include <iterator>
 #include <memory>
 
 namespace ft
 {
+template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
+struct iterator
+{
+	typedef T			value_type;
+	typedef Distance	difference_type;
+	typedef Pointer		pointer;
+	typedef Reference	reference;
+	typedef Category	iterator_category;
+};
+
+// Category
+class input_iterator_tag {};
+class output_iterator_tag {};
+class forward_iterator_tag			: public input_iterator_tag			{};
+class bidirectional_iterator_tag	: public forward_iterator_tag		{};
+class random_access_iterator_tag	: public bidirectional_iterator_tag	{}; //most functional thing
 
 template <class T, class Alloc = std::allocator<T> >
 class vector
 {
 public:
 	typedef Alloc																	allocator_type;
+
 private:
 	typedef T 																		value_type;
 	typedef typename allocator_type::reference										reference;
@@ -38,8 +56,7 @@ private:
 	size_t			_size;// size
 	size_t			_cap;// capacity
 
-	vector() : _ptr(NULL), _size(0), _cap(0) {}
-
+public:
 	explicit vector(const allocator_type& alloc = allocator_type())
 	:
 		_alloc(alloc),
@@ -49,18 +66,49 @@ private:
 	{}
 
 	/* n개의 컨테이너를 여러개 만드는 함수 */
-	// explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
-	// :
-	// {}
+	explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
+	:
+		_alloc(alloc),
+		_size(n),
+		_cap(n)
+	{
+		reserve(n);
+		for (int i = 0; i < _size; i++)
+		{
+			_alloc.construct(_ptr + i, val);
+		}
+		_size = n;
+	}
 
 	/* range constructor */
 	// template<class InputIterator>
 	// vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
 	// :
-	// {}
+	// 	_alloc(alloc),
+	// 	_size(0),
+	// 	_cap(0)
+	// {
+	// 	size_t n = last.pointer - first.pointer;
+	// 	reserve(n);
+	// 	for (int i = 0; i < n; i++)
+	// 	{
+	// 		_alloc.construct(_ptr + i, *(first + i));
+	// 	}
+	// 	_size = n;
+	// }
 
 	/* copy constructor */
-	// vector(const vector& x);
+	// vector(const vector& x)
+	// :
+	// 	_alloc(allocator_type()),
+	// 	x::iterator itrx = x.begin();
+	// {
+	// 	reserve(x.size());
+	// 	for(size_t i = 0; i < x.size(); i++)
+	// 	{
+	// 		_alloc.construct(_ptr + i, x);
+	// 	}
+	// }
 
 	iterator begin()
 	{
@@ -94,12 +142,12 @@ private:
 
 	/* CAPACITY */
 	/* resize */
-	void resize (size_type n, value_type val = value_type())
-	{
-		// n < size
-		// n > size
-		// n > capacity
-	}
+	// void resize (size_type n, value_type val = value_type())
+	// {
+	// 	n < size
+	// 	n > size
+	// 	n > capacity
+	// }
 
 	/* reserve */
 	void reserve(size_type n)
@@ -130,7 +178,7 @@ private:
 		size_type index = position - _ptr;
 		if (++_size > _cap)
 		{
-			reserve(_size * 2);
+			reserve(_size == 0 ? 1 : _size * 2);
 		}
 		if (index == _size)
 		{
@@ -140,7 +188,7 @@ private:
 		{
 			_alloc.construct(_ptr + _size, *(_ptr + _size - 1));
 			int i = _size - 1;
-			for (; i > index ; i--;)
+			for (; i > index ; i--)
 			{
 				*(_ptr + i) = *(_ptr + i - 1);
 			}
@@ -152,19 +200,6 @@ private:
 	/* fill */
 
 	/* range */
-};
-
-template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
-struct iterator
-{
-	typedef T			value_type;
-	typedef Distance	difference_type;
-	typedef Pointer		pointer;
-	typedef Reference	reference;
-	typedef Category	iterator_category;
-
-	iterator()
-	{};
 };
 
 /*
@@ -183,37 +218,29 @@ class iterator_traits
 //not defined;
 template <class T> class iterator_traits<T*>
 {
-	typedef typename ptrdiff_t						difference_type;
-	typedef typename T								value_type;
-	typedef typename T*								pointer;
-	typedef typename T&								reference;
+	typedef ptrdiff_t								difference_type;
+	typedef T										value_type;
+	typedef T*										pointer;
+	typedef T&										reference;
 	typedef typename ft::random_access_iterator_tag	iterator_category;//not implemented
 };
 
 template <class T> class
 iterator_traits<const T*>
 {
-	typedef typename ptrdiff_t						difference_type;
-	typedef typename T								value_type;
-	typedef typename T*								pointer;
-	typedef typename T&								reference;
+	typedef ptrdiff_t								difference_type;
+	typedef T										value_type;
+	typedef T*										pointer;
+	typedef T&										reference;
 	typedef typename ft::random_access_iterator_tag	iterator_category;//not implemented
 };
-
-
-// Category
-class input_iterator_tag { };
-class output_iterator_tag { };
-class forward_iterator_tag { };
-class bidirectional_iterator_tag { };
-class random_access_iterator_tag { }; //most functional thing
 
 template <typename T>
 class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 {
 public:
-	typedef typename ft:iterator<ft::random_access_iterator_tag, T>::value_type			value_type;
-	typedef typename Distance	difference_type;
+	typedef typename ft:iterator<ft::random_access_iterator_tag, T>::value_type		value_type;
+	typedef Distance	difference_type;
 	typedef Pointer		pointer;
 	typedef Reference	reference;
 	typedef Category	iterator_category;
@@ -250,6 +277,5 @@ public:
 	typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
 	typedef typename ft::iterator_traits<Iterator>::reference			reference;
 };
-
 
 };
