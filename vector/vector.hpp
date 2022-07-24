@@ -6,7 +6,7 @@
 /*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 02:41:59 by gunkim            #+#    #+#             */
-/*   Updated: 2022/07/25 02:08:08 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/07/25 04:00:44 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,40 @@ class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 	{
 		random_access_iterator temp(*this);
 		_elem++;
+		return (temp);
+	}
+	
+	random_access_iterator& operator--(void)
+	{
+		_elem--;
+		return (*this);
+	}
+
+	random_access_iterator operator--(int)
+	{
+		random_access_iterator temp(*this);
+		_elem--;
+		return (temp);
+	}
+
+	random_access_iterator operator+=(int)
+	{
+		random_access_iterator temp(*this);
+		_elem--;
+		return (temp);
+	}
+
+	random_access_iterator operator+(int num)
+	{
+		random_access_iterator temp(*this);
+		temp._elem += num;
+		return (temp);
+	}
+
+	random_access_iterator operator-(int num)
+	{
+		random_access_iterator temp(*this);
+		temp._elem -= num;
 		return (temp);
 	}
 };
@@ -285,10 +319,37 @@ public:
 		return (*(_begin + n));	
 	}
 
-	// void push_back(const value_type& val)
-	// {
-	// 	insert(end(), val);
-	// }
+	reference front()
+	{
+		return (*(_begin));
+	}
+
+	const_reference front() const
+	{
+		return (*(_begin));
+	}
+
+	reference back()
+	{
+		return (*(_end - 1));
+	}
+
+	const_reference back() const
+	{
+		return (*(_end - 1));
+	}
+
+	/* Modifier */
+
+	void push_back(const value_type& val)
+	{
+		insert(end(), val);
+	}
+
+	void pop_back()
+	{
+		erase(end() - 1);
+	}
 
 	/* insert */
 	/* single element(1) */
@@ -319,6 +380,29 @@ public:
 	/* fill */
 
 	/* range */
+
+	//single
+	iterator erase (iterator position)
+	{
+		size_type pos = &(*position) - _begin;
+		if (pos < 0 || this->size() < pos)
+		{
+			throw std::logic_error("vector");
+		}
+		size_type size = this->size();
+		size_type time = size - pos;
+		for (size_type i = 0; i < time; i++)
+		{
+			*(_begin + pos + i) = *(_begin + pos + i + 1);
+		}
+		_alloc.destroy(_end);
+		_end--;
+		return (_begin + pos);
+	}
+
+	//range
+	//iterator erase (iterator first, iterator last);
+
 };
 
 /*

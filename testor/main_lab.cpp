@@ -6,7 +6,7 @@
 /*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 05:54:19 by gunkim            #+#    #+#             */
-/*   Updated: 2022/07/25 02:07:52 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/07/25 04:01:18 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,34 @@ int main()
 {
 	ft::vector<int> vector_int;
 	std::cout << "size:" << vector_int.size() << std::endl;
+	vector_int.reserve(100);
 
 	ft::vector<int>::iterator itei = vector_int.begin();
-	vector_int.insert(itei, 42);
+	vector_int.push_back(42);
+	std::cout << "iterator base : " << itei.base() << std::endl;
+	std::cout << "vector size/cap: " << vector_int.size() << " / " << vector_int.capacity() << std::endl;
+	std::cout << "[0] : " <<  vector_int[0] << std::endl;
+	std::cout << "front : " <<  vector_int.front() << std::endl;
+	std::cout << "back  : " <<  vector_int.back() << std::endl;
 	
-	itei = vector_int.begin();
-	// vector_int.insert(itei++, 43);
-	vector_int.insert(++itei, 43);
-	// vector_int.insert(--itei, 41);
-	std::cout << "size:" << vector_int.size() << std::endl;
-	for (int i = 0; i < 3; i++)
-		std::cout << vector_int[i] << std::endl;
+	vector_int.push_back(43);
+	std::cout << "iterator base : " << itei.base() << std::endl;
+	std::cout << "vector size/cap: " << vector_int.size() << " / " << vector_int.capacity() << std::endl;
+	std::cout << "[0] : " <<  vector_int[0] << std::endl;
+	std::cout << "front : " <<  vector_int.front() << std::endl;
+	std::cout << "back  : " <<  vector_int.back() << std::endl;
+	
+	vector_int.pop_back();
+	std::cout << "iterator base : " << itei.base() << std::endl;
+	std::cout << "vector size/cap: " << vector_int.size() << " / " << vector_int.capacity() << std::endl;
+	std::cout << "[0] : " <<  vector_int[0] << std::endl;
+	std::cout << "front : " <<  vector_int.front() << std::endl;
+	std::cout << "back  : " <<  vector_int.back() << std::endl;
+	
+	vector_int.pop_back();
+	std::cout << "iterator base : " << itei.base() << std::endl;
+	std::cout << "vector size/cap: " << vector_int.size() << " / " << vector_int.capacity() << std::endl;
+	std::cout << "[0] : " <<  vector_int[0] << std::endl;
+	std::cout << "front : " <<  vector_int.front() << std::endl;
+	std::cout << "back  : " <<  vector_int.back() << std::endl;
 }
