@@ -6,14 +6,14 @@
 #    By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/29 18:58:59 by gunkim            #+#    #+#              #
-#    Updated: 2022/07/18 08:25:23 by gunkim           ###   ########.fr        #
+#    Updated: 2022/07/25 00:31:28 by gunkim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME        := test
 
 CXX         := c++
-CXXFLAGS    := -Wall -Wextra -Werror -std=c++98
+CXXFLAGS    := -g -Wall -Wextra -Werror -std=c++98
 
 RM          := rm -rf
 
