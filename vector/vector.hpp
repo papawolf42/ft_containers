@@ -6,7 +6,7 @@
 /*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 02:41:59 by gunkim            #+#    #+#             */
-/*   Updated: 2022/07/25 01:05:26 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/07/25 02:08:08 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,19 @@ class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 
 	pointer base() const { return (this->_elem); }
 	reference operator*(void) const { return (*_elem); }
+	
+	random_access_iterator& operator++(void)
+	{
+		_elem++;
+		return (*this);
+	}
+
+	random_access_iterator operator++(int)
+	{
+		random_access_iterator temp(*this);
+		_elem++;
+		return (temp);
+	}
 };
 
 template <class T, class Alloc = std::allocator<T> >
