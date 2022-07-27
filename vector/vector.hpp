@@ -6,7 +6,7 @@
 /*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 02:41:59 by gunkim            #+#    #+#             */
-/*   Updated: 2022/07/25 04:00:44 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/07/27 18:09:39 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 		this->_elem = copy._elem;
 		return (*this);
 	}
+
+	template <class U>
+	random_access_iterator(const random_access_iterator<U>& u) : _elem(u._elem) {}
+
 	~random_access_iterator() {}
 
 	pointer base() const { return (this->_elem); }
@@ -87,27 +91,93 @@ class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 		return (temp);
 	}
 
-	random_access_iterator operator+=(int)
+	random_access_iterator operator+(int num)
 	{
-		random_access_iterator temp(*this);
-		_elem--;
-		return (temp);
+		return (_elem + num);
 	}
 
-	random_access_iterator operator+(int num)
+	random_access_iterator operator-(int num)
+	{
+		return (_elem - num);
+	}
+
+	// 반복자간 빼기일 경우, 그 거리(정수)를 리턴.
+	int operator-(random_access_iterator& itr)
+	{
+		return (_elem - itr._elem);
+	}
+
+	random_access_iterator& operator+=(int num)
 	{
 		random_access_iterator temp(*this);
 		temp._elem += num;
 		return (temp);
 	}
 
-	random_access_iterator operator-(int num)
+	random_access_iterator& operator-=(int num)
 	{
 		random_access_iterator temp(*this);
 		temp._elem -= num;
 		return (temp);
 	}
+
+	value_type& operator[](size_t idx)
+	{
+		return (*(_elem + idx));
+	}
+
+	value_type& operator=(const value_type& val) const
+	{
+		return (*(_elem = val));
+	}
+
+	//equality/inequality comparisons operator
+	bool operator==(const random_access_iterator& itr) const
+	{
+		return ((_elem == itr._elem) ? 1 : 0);
+	}
+
+	bool operator!=(const random_access_iterator& itr) const
+	{
+		return ((_elem != itr._elem) ? 1 : 0);
+	}
+
+	//inequality comparisons operator
+	bool operator>(const random_access_iterator& itr) const
+	{
+		return ((_elem > itr._elem) ? 1 : 0);
+	}
+
+	bool operator>=(const random_access_iterator& itr) const
+	{
+		return ((_elem >= itr._elem) ? 1 : 0);
+	}
+
+	bool operator<(const random_access_iterator& itr) const
+	{
+		return ((_elem < itr._elem) ? 1 : 0);
+	}
+
+	bool operator<=(const random_access_iterator& itr) const
+	{
+		return ((_elem <= itr._elem) ? 1 : 0);
+	}
+
+	friend random_access_iterator operator+(int idx, random_access_iterator& itr);
+	friend random_access_iterator operator-(int idx, random_access_iterator& itr);
 };
+
+template <class T>
+random_access_iterator<T> operator+(int idx, random_access_iterator<T>& itr)
+{
+	return (itr._elem + idx);
+}
+
+template <class T>
+random_access_iterator<T> operator-(int idx, random_access_iterator<T>& itr)
+{
+	return (itr._elem - idx);
+}
 
 template <class T, class Alloc = std::allocator<T> >
 class vector
@@ -164,21 +234,23 @@ public:
 	}
 
 	/* range constructor */
-	// template<class InputIterator>
-	// vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
-	// :
-	// 	_alloc(alloc),
-	// 	_size(0),
-	// 	_cap(0)
-	// {
-	// 	size_t n = last.pointer - first.pointer;
-	// 	reserve(n);
-	// 	for (int i = 0; i < n; i++)
-	// 	{
-	// 		_alloc.construct(_ptr + i, *(first + i));
-	// 	}
-	// 	_size = n;
-	// }
+	template<class InputIterator>
+	vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+	:
+		_begin(NULL),
+		_end(NULL),
+		_end_cap(NULL),
+		_alloc(alloc)
+	{
+		size_type n = &(*last) - &(*first);
+		_begin = _alloc.allocate(n);
+		for (size_type i = 0; i < n; i++)
+		{
+			_alloc.construct(_begin + i, *(first + i));
+		}
+		_end = _begin + n;
+		_end_cap = _end;
+	}
 
 	/* copy constructor */
 	// vector(const vector& x)
@@ -195,22 +267,22 @@ public:
 
 	iterator begin()
 	{
-		return (_begin);
+		return (iterator(_begin));
 	}
 
 	const_iterator begin() const
 	{
-		return (_begin);
+		return (iterator(_begin));
 	}
 	
 	iterator end()
 	{
-		return (_end);
+		return (iterator(_end));
 	}
 
 	const_iterator end() const
 	{
-		return (_end);
+		return (iterator(_end));
 	}
 
 	// reverse_iterator rbegin()
