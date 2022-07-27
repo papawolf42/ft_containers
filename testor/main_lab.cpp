@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_lab.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gunkim <papawolf@kakao.com>                +#+  +:+       +#+        */
+/*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 05:54:19 by gunkim            #+#    #+#             */
-/*   Updated: 2022/07/25 17:26:46 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/07/27 22:50:31 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,25 +55,34 @@ int main()
 
 
 	// 013 range_constructor
-	ft::vector<int> series;
+	// ft::vector<int> series;
 
-	for (size_t i = 40; i < 50; i += 1)
-	{
-		series.push_back(i);
-	}
-	for (size_t i = 0; i < series.size(); i++)
-	{
-		std::cout << " " << series[i] << std::endl;;
-	}
+	// for (size_t i = 40; i < 50; i += 1)
+	// {
+	// 	series.push_back(i);
+	// }
+	// for (size_t i = 0; i < series.size(); i++)
+	// {
+	// 	std::cout << " " << series[i] << std::endl;;
+	// }
 
-	std::cout << std::endl;;
+	// std::cout << std::endl;;
 
-	ft::vector<int>::iterator first = series.begin() + 2;
-	ft::vector<int>::iterator second = series.end() - 2;
+	// ft::vector<int>::iterator first = series.begin() + 2;
+	// ft::vector<int>::iterator second = series.end() - 2;
 
-	ft::vector<int> series2(first, second);
-	for (size_t i = 0; i < series2.size(); i++)
-	{
-		std::cout << " " << series2[i] << std::endl;;
-	}
+	// ft::vector<int> series2(first, second);
+	// for (size_t i = 0; i < series2.size(); i++)
+	// {
+	// 	std::cout << " " << series2[i] << std::endl;;
+	// }
+
+
+
+	// 014 operator->
+
+	ft::vector<std::string> v(3, "hello");
+	ft::vector<std::string>::const_iterator it = v.begin();
+
+	std::cout << "length " << it->length() << std::endl;
 }

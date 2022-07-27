@@ -6,7 +6,7 @@
 /*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 02:41:59 by gunkim            #+#    #+#             */
-/*   Updated: 2022/07/27 18:09:39 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/07/27 22:52:50 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,17 @@ class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 		return (*this);
 	}
 
+	// implement const_iterator
 	template <class U>
-	random_access_iterator(const random_access_iterator<U>& u) : _elem(u._elem) {}
+	random_access_iterator(const random_access_iterator<U>& u) : _elem(u.base()) {}
 
 	~random_access_iterator() {}
 
-	pointer base() const { return (this->_elem); }
+	pointer base() const
+	{
+		return (_elem);
+	}
+
 	reference operator*(void) const { return (*_elem); }
 	
 	random_access_iterator& operator++(void)
@@ -161,6 +166,11 @@ class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 	bool operator<=(const random_access_iterator& itr) const
 	{
 		return ((_elem <= itr._elem) ? 1 : 0);
+	}
+
+	pointer operator->() const
+	{
+		return (_elem);
 	}
 
 	friend random_access_iterator operator+(int idx, random_access_iterator& itr);
@@ -483,6 +493,7 @@ public:
 template <class Iterator>
 class iterator_traits
 {
+public:
 	typedef typename Iterator::difference_type		difference_type;
 	typedef typename Iterator::value_type			value_type;
 	typedef typename Iterator::pointer				pointer;
@@ -517,11 +528,32 @@ template <class Iterator>
 class reverse_iterator
 {
 public:
+	typedef Iterator													iterator_type;
 	typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
 	typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
 	typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
 	typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
 	typedef typename ft::iterator_traits<Iterator>::reference			reference;
+
+private:
+	pointer _elem;
+
+	reverse_iterator()
+	:
+		_elem(NULL)
+	{}
+
+	explicit reverse_iterator(iterator_type it)
+	:
+		_elem(it)
+	{}
+
+	template <class Iter>
+	reverse_iterator(const reverse_iterator<Iter>& rev_it)
+	:
+		_elem(rev_it._elem)
+	{}
+
 };
 
 };
