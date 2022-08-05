@@ -6,7 +6,7 @@
 /*   By: gunkim <gunkim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 02:41:59 by gunkim            #+#    #+#             */
-/*   Updated: 2022/08/04 17:57:04 by gunkim           ###   ########.fr       */
+/*   Updated: 2022/08/05 13:29:13 by gunkim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,12 +193,12 @@ class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T>
 		return (temp);
 	}
 
-	random_access_iterator operator+(int num)
+	random_access_iterator operator+(difference_type num) const
 	{
 		return (_elem + num);
 	}
 
-	random_access_iterator operator-(difference_type num)
+	random_access_iterator operator-(difference_type num) const
 	{
 		return (_elem - num);
 	}
@@ -283,6 +283,129 @@ random_access_iterator<T> operator-(int idx, random_access_iterator<T>& itr)
 {
 	return (itr._elem - idx);
 }
+
+template <typename T>
+typename ft::random_access_iterator<T>::difference_type
+operator==(const ft::random_access_iterator<T> lhs,
+			const ft::random_access_iterator<T> rhs)
+{
+	return (lhs.base() == rhs.base());
+}
+
+template<typename T_L, typename T_R>
+typename ft::random_access_iterator<T_L>::difference_type
+operator==(const ft::random_access_iterator<T_L> lhs,
+			const ft::random_access_iterator<T_R> rhs)
+{
+	return (lhs.base() == rhs.base());
+}
+
+template <typename T>
+typename ft::random_access_iterator<T>::difference_type
+operator!=(const ft::random_access_iterator<T> lhs,
+			const ft::random_access_iterator<T> rhs)
+{
+	return (lhs.base() != rhs.base());
+}
+
+template<typename T_L, typename T_R>
+typename ft::random_access_iterator<T_L>::difference_type
+operator!=(const ft::random_access_iterator<T_L> lhs,
+			const ft::random_access_iterator<T_R> rhs)
+{
+	return (lhs.base() != rhs.base());
+}
+
+template <typename T>
+typename ft::random_access_iterator<T>::difference_type
+operator<(const ft::random_access_iterator<T> lhs,
+			const ft::random_access_iterator<T> rhs)
+{
+	return (lhs.base() < rhs.base());
+}
+
+template<typename T_L, typename T_R>
+typename ft::random_access_iterator<T_L>::difference_type
+operator<(const ft::random_access_iterator<T_L> lhs,
+			const ft::random_access_iterator<T_R> rhs)
+{
+	return (lhs.base() < rhs.base());
+}
+
+template <typename T>
+typename ft::random_access_iterator<T>::difference_type
+operator>(const ft::random_access_iterator<T> lhs,
+			const ft::random_access_iterator<T> rhs)
+{
+	return (lhs.base() > rhs.base());
+}
+
+template<typename T_L,
+			typename T_R>
+typename ft::random_access_iterator<T_L>::difference_type
+operator>(const ft::random_access_iterator<T_L> lhs,
+			const ft::random_access_iterator<T_R> rhs)
+{
+	return (lhs.base() > rhs.base());
+}
+
+template <typename T>
+typename ft::random_access_iterator<T>::difference_type
+operator<=(const ft::random_access_iterator<T> lhs,
+			const ft::random_access_iterator<T> rhs)
+{
+	return (lhs.base() <= rhs.base());
+}
+
+template<typename T_L, typename T_R>
+typename ft::random_access_iterator<T_L>::difference_type
+operator<=(const ft::random_access_iterator<T_L> lhs,
+			const ft::random_access_iterator<T_R> rhs)
+{
+	return (lhs.base() <= rhs.base());
+}
+
+template <typename T>
+typename ft::random_access_iterator<T>::difference_type
+operator>=(const ft::random_access_iterator<T> lhs,
+			const ft::random_access_iterator<T> rhs)
+{
+	return (lhs.base() >= rhs.base());
+}
+
+template<typename T_L,
+			typename T_R>
+typename ft::random_access_iterator<T_L>::difference_type
+operator>=(const ft::random_access_iterator<T_L> lhs,
+			const ft::random_access_iterator<T_R> rhs)
+{
+	return (lhs.base() >= rhs.base());
+}
+
+template<typename T>
+ft::random_access_iterator<T> operator+(
+	typename ft::random_access_iterator<T>::difference_type n,
+	typename ft::random_access_iterator<T>& rai)
+	{
+		return (&(*rai) + n);
+	}
+
+template <typename T>
+typename ft::random_access_iterator<T>::difference_type
+operator-(const ft::random_access_iterator<T> lhs,
+			const ft::random_access_iterator<T> rhs)
+{
+	return (lhs.base() - rhs.base());
+}
+
+template<typename T_L, typename T_R>
+typename ft::random_access_iterator<T_L>::difference_type
+operator-(const ft::random_access_iterator<T_L> lhs,
+			const ft::random_access_iterator<T_R> rhs)
+{
+	return (lhs.base() - rhs.base());
+}
+
 
 /*
 ** https://cplusplus.com/reference/iterator/reverse_iterator/
@@ -456,10 +579,10 @@ public:
 	typedef typename allocator_type::const_reference								const_reference;
 	typedef typename allocator_type::pointer										pointer;
 	typedef typename allocator_type::const_pointer									const_pointer;
-	typedef typename ft::random_access_iterator<value_type>							iterator;
-	typedef typename ft::random_access_iterator<const value_type>					const_iterator;
-	typedef typename ft::reverse_iterator<iterator>									reverse_iterator;
-	typedef typename ft::reverse_iterator<const_iterator>							const_reverse_iterator;
+	typedef ft::random_access_iterator<value_type>									iterator;
+	typedef ft::random_access_iterator<const value_type>							const_iterator;
+	typedef ft::reverse_iterator<iterator>											reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator>									const_reverse_iterator;
 
 private:
 	pointer			_begin;// pointer
@@ -511,7 +634,7 @@ public:
 		// size_type n = &(*last) - &(*first);
 		difference_type n = ft::distance(first, last);
 		_begin = _alloc.allocate(n);
-		for (size_type i = 0; i < n; i++)
+		for (difference_type i = 0; i < n; i++)
 		{
 			_alloc.construct(_begin + i, *(first + i));
 		}
@@ -554,22 +677,22 @@ public:
 
 	reverse_iterator rbegin()
 	{
-		
+		return (reverse_iterator(_end));
 	}
 
 	const_reverse_iterator rbegin() const
 	{
-		
+		return (reverse_iterator(_end));
 	}
 
 	reverse_iterator rend()
 	{
-		
+		return (reverse_iterator(_begin));
 	}
 
 	const_reverse_iterator rend() const
 	{
-		
+		return (reverse_iterator(_begin));
 	}
 
 	/* Capacity: */
@@ -602,7 +725,7 @@ public:
 			size_type times = n - size;
 			while (times--)
 			{
-				_alloc.contruct(_end, val);
+				_alloc.construct(_end, val);
 				_end++;
 			}
 		}
@@ -703,13 +826,13 @@ public:
 		size_type capacity = this->capacity();
 		if (n > capacity)
 		{
-			for (int i = 0; i < size; i++)
+			for (size_type i = 0; i < size; i++)
 			{
 				_alloc.destroy(_begin + i);
 			}
 			_alloc.deallocate(_begin, capacity);
 			_begin = _alloc.allocate(n);
-			for (int i = 0; i < n; i++)
+			for (size_type i = 0; i < n; i++)
 			{
 				_alloc.construct(_begin + i, first.base() + i);
 			}
@@ -718,17 +841,17 @@ public:
 		}
 		else if (n <= capacity)
 		{
-			for (int i = n; i < size; i++)
+			for (size_type i = n; i < size; i++)
 			{
 				_alloc.destroy(_begin + i);
 			}
-			for (int i = size; i < n; i++)
+			for (size_type i = size; i < n; i++)
 			{
 				_alloc.construct(_begin + i, first.base() + i);
 			}
-			for (int i = 0; i < size; i++)
+			for (size_type i = 0; i < size; i++)
 			{
-				*(_begin + i) = first.base() + i;
+				*(_begin + i) = *(first.base() + i);
 			}
 			_end = _begin + n;
 		}
@@ -745,13 +868,13 @@ public:
 		size_type capacity = this->capacity();
 		if (n > capacity)
 		{
-			for (int i = 0; i < size; i++)
+			for (size_type i = 0; i < size; i++)
 			{
 				_alloc.destroy(_begin + i);
 			}
 			_alloc.deallocate(_begin, capacity);
 			_begin = _alloc.allocate(n);
-			for (int i = 0; i < n; i++)
+			for (size_type i = 0; i < n; i++)
 			{
 				_alloc.construct(_begin + i, val);
 			}
@@ -760,15 +883,15 @@ public:
 		}
 		else if (n <= capacity)
 		{
-			for (int i = n; i < size; i++)
+			for (size_type i = n; i < size; i++)
 			{
 				_alloc.destroy(_begin + i);
 			}
-			for (int i = size; i < n; i++)
+			for (size_type i = size; i < n; i++)
 			{
 				_alloc.construct(_begin + i, val);
 			}
-			for (int i = 0; i < n; i++)
+			for (size_type i = 0; i < n; i++)
 			{
 				*(_begin + i) = val;
 			}
